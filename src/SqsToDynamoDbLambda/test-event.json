@@ -1,0 +1,13 @@
+{
+  "Records": [
+    {
+      "messageId": "test-message-01",
+      "receiptHandle": "receipt-handle",
+      "body": "{\"id\": 123, \"name\": \"Test Message\", \"value\": 42.5}",
+      "md5OfBody": "md5-hash",
+      "eventSource": "aws:sqs",
+      "eventSourceARN": "arn:aws:sqs:region:account:queue",
+      "awsRegion": "us-east-1"
+    }
+  ]
+}
