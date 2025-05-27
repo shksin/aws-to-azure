@@ -1,101 +1,80 @@
-using Amazon.Lambda.Core;
-using Amazon.Lambda.SQSEvents;
+using Azure.Messaging.ServiceBus;
+using Microsoft.Azure.Functions.Extensions.DependencyInjection;
+using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using SqsToDynamoDbLambda.Services;
+using System;
+using System.Threading.Tasks;
 
-// Assembly attribute to enable the Lambda function's JSON input to be converted into a .NET class.
-[assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.SystemTextJson.DefaultLambdaJsonSerializer))]
+[assembly: FunctionsStartup(typeof(SqsToDynamoDbLambda.Startup))]
 
 namespace SqsToDynamoDbLambda;
 
 /// <summary>
-/// Lambda function that processes messages from SQS and stores them in DynamoDB
+/// Startup class for Azure Functions
+/// </summary>
+public class Startup : FunctionsStartup
+{
+    public override void Configure(IFunctionsHostBuilder builder)
+    {
+        // Register services for dependency injection
+        builder.Services.AddSingleton<IDocumentDbService, CosmosDbService>();
+    }
+}
+
+/// <summary>
+/// Azure Function that processes messages from Service Bus Queue and stores them in Cosmos DB
 /// </summary>
 public class Function
 {
-    private readonly IDynamoDbService _dynamoDbService;
+    private readonly IDocumentDbService _documentDbService;
     private readonly ILogger<Function> _logger;
 
     /// <summary>
-    /// Default constructor used by AWS Lambda
+    /// Constructor for use with dependency injection
     /// </summary>
-    public Function()
+    public Function(IDocumentDbService documentDbService, ILogger<Function> logger)
     {
-        // Set up dependency injection
-        var services = new ServiceCollection();
-        ConfigureServices(services);
-        var serviceProvider = services.BuildServiceProvider();
-
-        _dynamoDbService = serviceProvider.GetRequiredService<IDynamoDbService>();
-        _logger = serviceProvider.GetRequiredService<ILogger<Function>>();
-    }
-
-    /// <summary>
-    /// Constructor for use with dependency injection (used in testing)
-    /// </summary>
-    public Function(IDynamoDbService dynamoDbService, ILogger<Function> logger)
-    {
-        _dynamoDbService = dynamoDbService;
+        _documentDbService = documentDbService;
         _logger = logger;
     }
 
     /// <summary>
-    /// Configure the dependency injection container
+    /// Azure Function handler method that processes Service Bus queue messages
     /// </summary>
-    private void ConfigureServices(IServiceCollection services)
-    {
-        // Add logging
-        services.AddLogging(builder =>
-        {
-            builder.AddConsole();
-            builder.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Information);
-        });
-
-        // Add DynamoDB service
-        services.AddSingleton<IDynamoDbService, DynamoDbService>();
-    }
-
-    /// <summary>
-    /// Lambda handler method that processes SQS events
-    /// </summary>
-    /// <param name="sqsEvent">The SQS event containing one or more messages</param>
-    /// <param name="context">The Lambda context</param>
+    /// <param name="message">The Service Bus message</param>
+    /// <param name="log">Function logger</param>
     /// <returns>Async Task</returns>
-    public async Task FunctionHandler(SQSEvent sqsEvent, ILambdaContext context)
+    [FunctionName("ServiceBusQueueTrigger")]
+    public async Task Run(
+        [ServiceBusTrigger("%ServiceBusQueueName%", Connection = "ServiceBusConnectionString")] ServiceBusReceivedMessage message,
+        ILogger log)
     {
-        if (sqsEvent.Records == null || !sqsEvent.Records.Any())
+        if (message == null)
         {
-            context.Logger.LogWarning("No SQS messages received");
-            _logger.LogWarning("No SQS messages received");
+            log.LogWarning("No Service Bus message received");
+            _logger.LogWarning("No Service Bus message received");
             return;
         }
 
-        context.Logger.LogInformation($"Beginning to process {sqsEvent.Records.Count} records");
-        _logger.LogInformation($"Beginning to process {sqsEvent.Records.Count} records");
-
-        foreach (var record in sqsEvent.Records)
+        try
         {
-            try
-            {
-                context.Logger.LogInformation($"Processing message {record.MessageId}");
-                _logger.LogInformation($"Processing message {record.MessageId}");
+            log.LogInformation($"Processing message {message.MessageId}");
+            _logger.LogInformation($"Processing message {message.MessageId}");
 
-                // Process the message and write to DynamoDB
-                await _dynamoDbService.WriteMessageToDynamoDbAsync(record);
+            // Process the message and write to Cosmos DB
+            await _documentDbService.WriteMessageToCosmosDbAsync(message);
 
-                context.Logger.LogInformation($"Successfully processed message {record.MessageId}");
-                _logger.LogInformation($"Successfully processed message {record.MessageId}");
-            }
-            catch (Exception ex)
-            {
-                // Log the error but don't throw to ensure other messages are processed
-                context.Logger.LogError($"Error processing message {record.MessageId}: {ex.Message}");
-                _logger.LogError(ex, $"Error processing message {record.MessageId}");
-            }
+            log.LogInformation($"Successfully processed message {message.MessageId}");
+            _logger.LogInformation($"Successfully processed message {message.MessageId}");
         }
-
-        context.Logger.LogInformation("Completed processing of all records");
-        _logger.LogInformation("Completed processing of all records");
+        catch (Exception ex)
+        {
+            // Log the error
+            log.LogError($"Error processing message {message.MessageId}: {ex.Message}");
+            _logger.LogError(ex, $"Error processing message {message.MessageId}");
+            throw; // Rethrow to ensure Azure Functions can handle the error properly
+        }
     }
 }
