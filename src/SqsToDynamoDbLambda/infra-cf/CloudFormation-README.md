@@ -20,7 +20,7 @@ cd src/SqsToDynamoDbLambda
 dotnet build -c Release
 
 # Package the function
-dotnet lambda package -c Release -o ./lambda-function.zip
+dotnet lambda package -c Release -o ./infra-cf/lambda-function.zip
 ```
 
 ### 2. Create an S3 Bucket for Deployment (if needed)
@@ -32,18 +32,18 @@ aws s3 mb s3://your-deployment-bucket --region your-region
 ### 3. Upload the Lambda Package to S3
 
 ```bash
-aws s3 cp ./lambda-function.zip s3://your-deployment-bucket/
+aws s3 cp ./infra-cf/lambda-function.zip s3://your-deployment-bucket/
 ```
 
 ### 4. Update the CloudFormation Template
 
-Open `cloudformation.yaml` and replace `DEPLOYMENT_BUCKET_NAME_TO_BE_REPLACED` with your actual S3 bucket name.
+Open `infra-cf/cloudformation.yaml` and replace `DEPLOYMENT_BUCKET_NAME_TO_BE_REPLACED` with your actual S3 bucket name.
 
 ### 5. Deploy the CloudFormation Stack
 
 ```bash
 aws cloudformation deploy \
-  --template-file cloudformation.yaml \
+  --template-file infra-cf/cloudformation.yaml \
   --stack-name sqs-to-dynamodb-stack \
   --capabilities CAPABILITY_IAM \
   --parameter-overrides \
@@ -66,7 +66,7 @@ Example with custom parameters:
 
 ```bash
 aws cloudformation deploy \
-  --template-file cloudformation.yaml \
+  --template-file infra-cf/cloudformation.yaml \
   --stack-name sqs-to-dynamodb-stack \
   --capabilities CAPABILITY_IAM \
   --parameter-overrides \

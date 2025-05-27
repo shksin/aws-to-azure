@@ -28,8 +28,10 @@ src/
      ├─ Models/               # Data models
      ├─ Services/             # Service implementations
      ├─ Function.cs           # Lambda function handler
-     ├─ cloudformation.yaml   # CloudFormation template
-     ├─ deploy.sh             # Deployment script
+     ├─ infra-cf/             # CloudFormation infrastructure
+     │  ├─ cloudformation.yaml   # CloudFormation template
+     │  ├─ deploy.sh             # Deployment script
+     │  └─ cloudformation-parameters.json # CloudFormation parameters
      └─ SqsToDynamoDbLambda.csproj # Project file
 ```
 
@@ -64,10 +66,11 @@ Deploy all resources (Lambda, SQS queue, DynamoDB table, and IAM roles) using Cl
 
 2. **Run the deployment script**:
    ```
+   cd src/SqsToDynamoDbLambda/infra-cf
    ./deploy.sh --s3-bucket your-bucket-name
    ```
 
-For more detailed instructions on CloudFormation deployment, see [CloudFormation-README.md](src/SqsToDynamoDbLambda/CloudFormation-README.md) in the SqsToDynamoDbLambda folder.
+For more detailed instructions on CloudFormation deployment, see [CloudFormation-README.md](src/SqsToDynamoDbLambda/infra-cf/CloudFormation-README.md) in the infra-cf folder.
 
 ### Environment Variables
 

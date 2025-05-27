@@ -6,6 +6,8 @@ STACK_NAME="sqs-to-dynamodb-stack"
 S3_BUCKET=""
 REGION="us-east-1"
 PARAM_FILE="cloudformation-parameters.json"
+SCRIPT_DIR=$(dirname "$0")
+PROJECT_DIR=".."
 
 # Parse command line arguments
 while [[ $# -gt 0 ]]; do
@@ -51,19 +53,21 @@ if [ -z "$S3_BUCKET" ]; then
 fi
 
 echo "=== Building and packaging Lambda function ==="
+cd $PROJECT_DIR
 dotnet build -c Release
 if [ $? -ne 0 ]; then
   echo "Build failed"
   exit 1
 fi
 
-dotnet lambda package -c Release -o ./lambda-function.zip
+dotnet lambda package -c Release -o $SCRIPT_DIR/lambda-function.zip
 if [ $? -ne 0 ]; then
   echo "Packaging failed"
   exit 1
 fi
 
 echo "=== Uploading Lambda package to S3 ==="
+cd $SCRIPT_DIR
 aws s3 cp ./lambda-function.zip s3://$S3_BUCKET/ --region $REGION
 if [ $? -ne 0 ]; then
   echo "Upload to S3 failed"
@@ -71,19 +75,19 @@ if [ $? -ne 0 ]; then
 fi
 
 echo "=== Creating temporary CloudFormation template with S3 bucket name ==="
-sed "s/DEPLOYMENT_BUCKET_NAME_TO_BE_REPLACED/$S3_BUCKET/g" cloudformation.yaml > cloudformation-deploy.yaml
+sed "s/DEPLOYMENT_BUCKET_NAME_TO_BE_REPLACED/$S3_BUCKET/g" $SCRIPT_DIR/cloudformation.yaml > $SCRIPT_DIR/cloudformation-deploy.yaml
 
 echo "=== Deploying CloudFormation stack ==="
 aws cloudformation deploy \
-  --template-file cloudformation-deploy.yaml \
+  --template-file $SCRIPT_DIR/cloudformation-deploy.yaml \
   --stack-name $STACK_NAME \
   --capabilities CAPABILITY_IAM \
-  --parameter-overrides file://$PARAM_FILE \
+  --parameter-overrides file://$SCRIPT_DIR/$PARAM_FILE \
   --region $REGION
 
 if [ $? -ne 0 ]; then
   echo "CloudFormation deployment failed"
-  rm cloudformation-deploy.yaml
+  rm $SCRIPT_DIR/cloudformation-deploy.yaml
   exit 1
 fi
 
@@ -96,4 +100,4 @@ aws cloudformation describe-stacks \
   --region $REGION
 
 # Clean up
-rm cloudformation-deploy.yaml
+rm $SCRIPT_DIR/cloudformation-deploy.yaml
