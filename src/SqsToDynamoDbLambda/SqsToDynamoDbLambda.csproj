@@ -6,6 +6,14 @@
     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
     <AzureFunctionsVersion>v4</AzureFunctionsVersion>
   </PropertyGroup>
+
+  <!-- Exclude AWS files from build -->
+  <ItemGroup>
+    <Compile Remove="Services\Aws\**" />
+    <Content Remove="Services\Aws\**" />
+    <EmbeddedResource Remove="Services\Aws\**" />
+    <None Remove="Services\Aws\**" />
+  </ItemGroup>
   
   <ItemGroup>
     <PackageReference Include="Microsoft.Azure.Functions.Extensions" Version="1.1.0" />
