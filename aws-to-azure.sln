@@ -1,0 +1,26 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{2649944E-0E08-4F4A-8B93-D387A7CA982A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SqsToDynamoDbLambda", "src\SqsToDynamoDbLambda\SqsToDynamoDbLambda.csproj", "{46BB0207-88A0-4B8C-87D0-CF2855E42E41}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{46BB0207-88A0-4B8C-87D0-CF2855E42E41}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{46BB0207-88A0-4B8C-87D0-CF2855E42E41}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{46BB0207-88A0-4B8C-87D0-CF2855E42E41}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{46BB0207-88A0-4B8C-87D0-CF2855E42E41}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{46BB0207-88A0-4B8C-87D0-CF2855E42E41} = {2649944E-0E08-4F4A-8B93-D387A7CA982A}
+	EndGlobalSection
+EndGlobal
