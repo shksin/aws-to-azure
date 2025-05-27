@@ -6,13 +6,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{2649944E-0E0
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SqsToDynamoDbLambda", "src\SqsToDynamoDbLambda\SqsToDynamoDbLambda.csproj", "{46BB0207-88A0-4B8C-87D0-CF2855E42E41}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "aws", "aws", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{46BB0207-88A0-4B8C-87D0-CF2855E42E41}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -20,7 +19,11 @@ Global
 		{46BB0207-88A0-4B8C-87D0-CF2855E42E41}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{46BB0207-88A0-4B8C-87D0-CF2855E42E41}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{46BB0207-88A0-4B8C-87D0-CF2855E42E41} = {2649944E-0E08-4F4A-8B93-D387A7CA982A}
+		{46BB0207-88A0-4B8C-87D0-CF2855E42E41} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{02EA681E-C7D8-13C7-8484-4AC65E1B71E8} = {2649944E-0E08-4F4A-8B93-D387A7CA982A}
 	EndGlobalSection
 EndGlobal
