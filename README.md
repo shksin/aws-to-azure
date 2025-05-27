@@ -28,10 +28,14 @@ src/
      ├─ Models/               # Data models
      ├─ Services/             # Service implementations
      ├─ Function.cs           # Lambda function handler
+     ├─ cloudformation.yaml   # CloudFormation template
+     ├─ deploy.sh             # Deployment script
      └─ SqsToDynamoDbLambda.csproj # Project file
 ```
 
 ### Deployment
+
+#### Option 1: Manual Deployment
 
 1. **Install the AWS Lambda .NET Global Tool** (if not already installed):
    ```
@@ -48,6 +52,22 @@ src/
    - In the AWS Console, navigate to the Lambda function
    - Add an SQS trigger and select the desired queue
    - Configure batch size and other settings as needed
+
+#### Option 2: CloudFormation Deployment
+
+Deploy all resources (Lambda, SQS queue, DynamoDB table, and IAM roles) using CloudFormation:
+
+1. **Navigate to the project directory**:
+   ```
+   cd src/SqsToDynamoDbLambda
+   ```
+
+2. **Run the deployment script**:
+   ```
+   ./deploy.sh --s3-bucket your-bucket-name
+   ```
+
+For more detailed instructions on CloudFormation deployment, see [CloudFormation-README.md](src/SqsToDynamoDbLambda/CloudFormation-README.md) in the SqsToDynamoDbLambda folder.
 
 ### Environment Variables
 
