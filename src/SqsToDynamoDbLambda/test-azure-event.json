@@ -1,0 +1,11 @@
+{
+  "message": {
+    "messageId": "test-message-01",
+    "body": "{\"id\": 123, \"name\": \"Test Message\", \"value\": 42.5}",
+    "contentType": "application/json",
+    "applicationProperties": {
+      "source": "test",
+      "priority": "high"
+    }
+  }
+}
