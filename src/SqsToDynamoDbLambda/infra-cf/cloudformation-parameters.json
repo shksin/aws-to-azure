@@ -1,0 +1,22 @@
+[
+  {
+    "ParameterKey": "LambdaFunctionName",
+    "ParameterValue": "SqsToDynamoDbFunction"
+  },
+  {
+    "ParameterKey": "DynamoDBTableName",
+    "ParameterValue": "SqsMessages"
+  },
+  {
+    "ParameterKey": "SQSQueueName",
+    "ParameterValue": "SqsMessageQueue"
+  },
+  {
+    "ParameterKey": "LambdaMemorySize",
+    "ParameterValue": "256"
+  },
+  {
+    "ParameterKey": "LambdaTimeout",
+    "ParameterValue": "30"
+  }
+]
