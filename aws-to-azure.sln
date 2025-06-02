@@ -4,7 +4,7 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{2649944E-0E08-4F4A-8B93-D387A7CA982A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SqsToDynamoDbLambda", "src\SqsToDynamoDbLambda\SqsToDynamoDbLambda.csproj", "{46BB0207-88A0-4B8C-87D0-CF2855E42E41}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SqsToDynamoDbLambda", "src\aws\SqsToDynamoDbLambda\SqsToDynamoDbLambda.csproj", "{46BB0207-88A0-4B8C-87D0-CF2855E42E41}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "aws", "aws", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
 EndProject
